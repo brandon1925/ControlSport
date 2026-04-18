@@ -1,0 +1,228 @@
+/* Archivo: assets/css/alumnos.css */
+
+.header-alumnos {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header-alumnos h2 {
+    color: #0047AB;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.select-filtro-grupo {
+    padding: 10px 35px 10px 15px;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #334155;
+    outline: none;
+    background-color: white;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394A3B8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px top 50%;
+    background-size: 10px auto;
+    min-width: 250px;
+}
+
+/* Empty State */
+.empty-state-alumnos {
+    background: white;
+    border: 1px solid #F1F5F9;
+    border-radius: 12px;
+    padding: 80px 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+.icon-box-empty {
+    width: 64px;
+    height: 64px;
+    background: #F1F5F9;
+    color: #0047AB;
+    border-radius: 16px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.empty-state-alumnos p {
+    color: #94A3B8;
+    font-size: 15px;
+    margin: 0;
+}
+
+/* Lista de Alumnos */
+.subtitle-grupo {
+    color: #94A3B8;
+    font-size: 13px;
+    margin-bottom: 15px;
+    display: none; /* Se muestra con JS */
+}
+
+.alumno-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px 25px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+    border: 1px solid #F1F5F9;
+    transition: transform 0.2s ease;
+}
+
+.alumno-card:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+.alumno-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.avatar-initials {
+    width: 42px;
+    height: 42px;
+    background-color: #0047AB;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.alumno-details h4 {
+    color: #1E293B;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 5px 0;
+}
+
+.alumno-details p {
+    margin: 0;
+    color: #94A3B8;
+    font-size: 12px;
+}
+
+.alumno-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Botones de acción */
+.btn-action {
+    background: white;
+    border: 1px solid #E2E8F0;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
+}
+
+.btn-update { color: #0047AB; }
+.btn-update:hover { background: #F8FAFC; border-color: #0047AB; }
+
+.btn-view { color: #0047AB; }
+.btn-view:hover { background: #F8FAFC; border-color: #0047AB; }
+
+.btn-delete { color: #EF4444; }
+.btn-delete:hover { background: #FEF2F2; border-color: #EF4444; }
+
+/* Modales */
+.modal-header-simple { border-bottom: 1px solid #F1F5F9; padding-bottom: 15px; margin-bottom: 20px; }
+.modal-header-simple h3 { color: #0047AB; font-size: 18px; margin: 0; }
+
+.detail-row { margin-bottom: 15px; }
+.detail-row label { display: block; font-size: 11px; color: #94A3B8; margin-bottom: 4px; }
+.detail-row p { margin: 0; font-size: 15px; color: #1E293B; }
+
+.input-readonly { background-color: #F1F5F9 !important; color: #94A3B8 !important; cursor: not-allowed; }
+.input-label span { color: #94A3B8; font-size: 11px; font-weight: normal; margin-left: 5px; }
+
+/* Ajustes de los inputs del formulario Modal para que se vean como el Figma */
+.form-group { margin-bottom: 15px; text-align: left; }
+.form-group label { display: block; font-size: 12px; color: #64748B; font-weight: 600; margin-bottom: 6px; }
+.form-group input { width: 100%; padding: 10px 15px; border: 1px solid #E2E8F0; border-radius: 8px; font-size: 14px; color: #1E293B; outline: none; transition: 0.2s; }
+.form-group input:focus { border-color: #0047AB; box-shadow: 0 0 0 3px rgba(0,71,171,0.1); }
+
+/* Toasts */
+.toast-top-right { position: fixed; top: 30px; right: 30px; z-index: 9999; display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.08); transform: translateX(150%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.toast-top-right.show { transform: translateX(0); }
+.toast-error { background: #FEF2F2; color: #DC2626; border: 1px solid #FEE2E2; }
+.toast-success { background: #F0FDF4; color: #16A34A; border: 1px solid #DCFCE7; }
+
+/* ====== BOTONES DE MODALES (Ajuste Diseño Figma) ====== */
+.modal-footer-dual {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+}
+
+.btn-cancel {
+    background: white;
+    color: #64748B;
+    border: 1px solid #E2E8F0;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    flex: 1;
+}
+.btn-cancel:hover {
+    background: #F8FAFC;
+    border-color: #CBD5E1;
+}
+
+.btn-orange-solid {
+    background: #FF5A00;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    flex: 1;
+}
+.btn-orange-solid:hover {
+    background: #E04E00;
+}
+
+.btn-red-solid {
+    background: #EF4444;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    flex: 1;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn-red-solid:hover {
+    background: #DC2626;
+}

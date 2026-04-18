@@ -1,0 +1,55 @@
+/* Archivo: assets/css/inicio.css */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    margin-top: 10px;
+}
+
+.stat-card {
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.stat-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+}
+
+.stat-info h4 {
+    color: #64748B;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.stat-info h2 {
+    color: var(--text-dark);
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Colores exactos del Figma */
+.card-green .stat-icon { background: #ECFDF5; color: #10B981; }
+.card-blue .stat-icon { background: #EFF6FF; color: #3B82F6; }
+.card-purple .stat-icon { background: #F5F3FF; color: #8B5CF6; }
+.card-orange .stat-icon { background: #FFFBEB; color: #F59E0B; }

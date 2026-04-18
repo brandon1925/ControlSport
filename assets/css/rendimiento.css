@@ -1,0 +1,200 @@
+/* Archivo: assets/css/rendimiento.css */
+
+.header-rendimiento h2 {
+    color: #0047AB;
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+/* ================== SELECTORES (A PRUEBA DE NAVEGADORES) ================== */
+.selection-card-full {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    border: 1px solid #F1F5F9;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    margin-bottom: 30px;
+}
+
+.selection-group {
+    margin-bottom: 25px;
+}
+
+.selection-group:last-child {
+    margin-bottom: 0;
+}
+
+.selection-group label {
+    display: block;
+    font-size: 14px;
+    color: #64748B;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* Diseño súper reforzado para los Selects */
+.select-filtro-grupo {
+    width: 100%;
+    padding: 16px 20px;
+    border: 1px solid #F1F5F9;
+    border-radius: 12px;
+    background-color: #F8FAFC;
+    font-size: 15px;
+    color: #1E293B;
+    outline: none;
+    
+    /* Obligamos al navegador a borrar su diseño feo nativo */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    
+    /* Inyectamos una flecha SVG personalizada directamente en el CSS */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8'%3e%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3e%3C/path%3e%3C/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+    background-size: 18px;
+    
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.select-filtro-grupo:focus {
+    background-color: white;
+    border-color: #0047AB;
+    box-shadow: 0 0 0 4px rgba(0, 71, 171, 0.1);
+}
+
+.select-filtro-grupo:disabled {
+    background-color: #F8FAFC;
+    color: #94A3B8;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+/* ================== EVALUACIÓN (SLIDERS) ================== */
+.section-title-alt {
+    color: #0047AB;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.section-subtitle {
+    color: #94A3B8;
+    font-size: 12px;
+    margin-bottom: 25px;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.metric-card {
+    background: #F8FAFC;
+    border-radius: 12px;
+    padding: 20px 25px;
+    border: 1px solid #F1F5F9;
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.metric-header span:first-child {
+    color: #475569;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.metric-header .score-display {
+    color: #0047AB;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+/* Slider Base */
+.range-slider {
+    width: 100%;
+    height: 8px;
+    background: #E2E8F0;
+    border-radius: 10px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    background: #0047AB;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform 0.1s;
+}
+
+.range-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    color: #CBD5E1;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* Área de Notas */
+.notes-container { margin-top: 30px; }
+.notes-container label { display: block; font-size: 14px; color: #64748B; font-weight: 600; margin-bottom: 10px; }
+
+.notes-textarea {
+    width: 100%;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 14px;
+    color: #1E293B;
+    outline: none;
+    resize: none;
+    transition: 0.3s;
+}
+
+.notes-textarea:focus {
+    background: white;
+    border-color: #0047AB;
+    box-shadow: 0 0 0 4px rgba(0, 71, 171, 0.1);
+}
+
+/* Botón Guardar */
+.form-footer { display: flex; justify-content: flex-end; margin-top: 30px; }
+
+.btn-save-eval {
+    background: #FF5A00;
+    color: white;
+    border: none;
+    padding: 16px 50px;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 12px rgba(255, 90, 0, 0.2);
+}
+
+.btn-save-eval:hover { background: #E04E00; transform: translateY(-2px); }
+
+@media (max-width: 768px) { .metrics-grid { grid-template-columns: 1fr; } }

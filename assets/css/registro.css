@@ -1,0 +1,89 @@
+/* Archivo: assets/css/registro.css */
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body { background-color: #F8F9FA; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 20px; }
+
+.form-container { 
+    background-color: white; 
+    width: 100%; 
+    max-width: 480px; 
+    border-radius: 12px; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+    overflow: hidden; 
+    margin-bottom: 20px;
+}
+
+/* Header Azul Oscuro */
+.form-header { 
+    background-color: #0047AB; 
+    color: white; 
+    padding: 20px; 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+}
+.form-header a { color: white; text-decoration: none; font-size: 22px; display: flex; align-items: center; transition: 0.2s;}
+.form-header a:hover { opacity: 0.8; }
+.form-header h2 { font-size: 18px; font-weight: 600; margin: 0; }
+
+.form-body { padding: 30px 25px; }
+
+/* Estilo de los campos (Figma) */
+.input-group { margin-bottom: 20px; text-align: left; }
+.input-group label { display: block; font-size: 12px; color: #64748B; font-weight: 600; margin-bottom: 8px; }
+
+.input-wrapper { position: relative; display: flex; align-items: center; }
+.input-wrapper i { position: absolute; left: 15px; font-size: 20px; color: #94A3B8; }
+
+.input-wrapper input, .input-wrapper select { 
+    width: 100%; 
+    padding: 14px 15px 14px 45px; 
+    border: 1px solid transparent; 
+    background-color: #F8FAFC; 
+    border-radius: 10px; 
+    font-size: 14px; 
+    color: #1E293B; 
+    outline: none; 
+    transition: 0.3s; 
+    appearance: none; 
+}
+.input-wrapper input:focus, .input-wrapper select:focus { 
+    background-color: white; 
+    border-color: #0047AB; 
+    box-shadow: 0 0 0 3px rgba(0, 71, 171, 0.1); 
+}
+
+/* Para agregar la flechita nativa al select sin perder nuestro diseño */
+.select-wrapper::after {
+    content: '\2304';
+    position: absolute;
+    right: 15px;
+    color: #94A3B8;
+    pointer-events: none;
+    font-size: 12px;
+}
+
+.btn-submit { 
+    width: 100%; 
+    background-color: #FF5A00; 
+    color: white; 
+    border: none; 
+    padding: 16px; 
+    border-radius: 10px; 
+    font-size: 16px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    margin-top: 10px; 
+}
+.btn-submit:hover { background-color: #E04E00; }
+
+.alert-box {
+    background: #FEF2F2; 
+    color: #EF4444; 
+    padding: 15px; 
+    border-radius: 8px; 
+    font-size: 14px; 
+    text-align: center;
+    border: 1px solid #FEE2E2;
+}

@@ -1,0 +1,247 @@
+/* Archivo: assets/css/informes.css */
+
+.header-informes {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.header-informes h2 {
+    color: #0047AB;
+    font-size: 24px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+}
+
+/* ================= RANKING VISTA ================= */
+.subtitle-ranking {
+    color: #94A3B8;
+    font-size: 13px;
+    margin-bottom: 20px;
+}
+
+.ranking-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.ranking-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px 25px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ranking-card:hover {
+    border-color: #0047AB;
+    box-shadow: 0 8px 20px rgba(0, 71, 171, 0.08);
+    transform: translateY(-2px);
+}
+
+.rank-info-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Medallas Circulares */
+.medal-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+}
+.medal-gold-circle { background: #FEF08A; color: #CA8A04; }
+.medal-silver-circle { background: #E2E8F0; color: #64748B; }
+.medal-bronze-circle { background: #FED7AA; color: #C2410C; }
+.medal-none-circle { background: #F1F5F9; color: #94A3B8; }
+
+.avatar-rank {
+    width: 45px;
+    height: 45px;
+    background-color: #0047AB;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.student-details h4 {
+    margin: 0 0 5px 0;
+    color: #1E293B;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Badges de Medalla en texto */
+.badge-medal {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+}
+.badge-gold { background: #FACC15; }
+.badge-silver { background: #94A3B8; }
+.badge-bronze { background: #D97706; }
+
+.student-stats {
+    color: #94A3B8;
+    font-size: 13px;
+    display: flex;
+    gap: 15px;
+}
+
+.rank-info-right {
+    text-align: right;
+}
+
+.pts-number {
+    color: #0047AB;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+.pts-label {
+    color: #94A3B8;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+/* ================= DETALLE VISTA (Gráfica + Notas) ================= */
+#detalleAlumnoView {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.btn-back {
+    background: transparent;
+    color: #64748B;
+    border: 1px solid #E2E8F0;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+.btn-back:hover { background: #F8FAFC; color: #0047AB; border-color: #0047AB; }
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+}
+
+.detail-card {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+}
+
+.detail-card h3 {
+    color: #0047AB;
+    font-size: 18px;
+    margin-top: 0;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Filtros de Gráfica */
+.chart-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.filter-btn {
+    background: #F1F5F9;
+    border: none;
+    color: #64748B;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.filter-btn.active, .filter-btn:hover {
+    background: #FF5A00;
+    color: white;
+}
+
+.chart-wrapper {
+    height: 350px;
+    width: 100%;
+}
+
+/* Observaciones Sidebar */
+.obs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.obs-item {
+    background: #F8FAFC;
+    border-left: 3px solid #0047AB;
+    padding: 15px;
+    border-radius: 0 8px 8px 0;
+}
+
+.obs-date {
+    font-size: 11px;
+    color: #94A3B8;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.obs-text {
+    font-size: 13px;
+    color: #334155;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.empty-obs {
+    text-align: center;
+    color: #94A3B8;
+    font-size: 14px;
+    padding: 30px 0;
+}
