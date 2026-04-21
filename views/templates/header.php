@@ -57,7 +57,7 @@
                 <a href="inicio.php"><i class="ph ph-house"></i> Inicio</a>
             </li>
             
-            <!--<?php if ($rol_sidebar === 'Entrenador'): ?>
+            <?php if ($rol_sidebar === 'Entrenador'): ?>
                 <li class="<?= ($pagina_actual == 'solicitudes.php') ? 'active' : '' ?>">
                     <a href="solicitudes.php"><i class="ph ph-file-text"></i> Solicitudes</a>
                 </li>
@@ -76,7 +76,7 @@
                 <li class="<?= ($pagina_actual == 'informes.php') ? 'active' : '' ?>">
                     <a href="informes.php"><i class="ph ph-chart-line-up"></i> Informes</a>
                 </li>
-            <?php endif; ?> -->
+            <?php endif; ?>
 
             <?php if ($rol_sidebar === 'Administrador'): ?>
                 <li class="<?= ($pagina_actual == 'gestion.php') ? 'active' : '' ?>">

@@ -90,7 +90,7 @@ require_once '../templates/header.php';
         <?php if($rol_usuario === 'Entrenador'): ?>
             <!-- Botón exclusivo para Entrenadores -->
             <button class="btn-orange" onclick="copiarEnlaceRegistro()">
-                <!-- <i class="ph ph-link"></i> Generar enlace de inscripción -->
+                <i class="ph ph-link"></i> Generar enlace de inscripción
             </button>
         <?php endif; ?>
     </div>
