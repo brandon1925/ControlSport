@@ -109,23 +109,44 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function capitalizarPalabras(texto) {
-        return texto.toLowerCase().replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
-    }
-
+    // ==========================================
+    // MEJORA 1: AUTO-MAYÚSCULAS EN NOMBRES
+    // ==========================================
     if (nombreAlumnoInput) {
         nombreAlumnoInput.addEventListener('input', function(e) {
             let start = this.selectionStart; let end = this.selectionEnd;
-            this.value = capitalizarPalabras(this.value); this.setSelectionRange(start, end);
+            this.value = this.value.toUpperCase(); 
+            this.setSelectionRange(start, end);
         });
     }
 
     if (nombreTutorInput) {
         nombreTutorInput.addEventListener('input', function(e) {
             let start = this.selectionStart; let end = this.selectionEnd;
-            this.value = capitalizarPalabras(this.value); this.setSelectionRange(start, end);
+            this.value = this.value.toUpperCase(); 
+            this.setSelectionRange(start, end);
         });
     }
+
+    // ==========================================
+    // NUEVO: BLOQUEO ESTRICTO DE NÚMEROS NEGATIVOS
+    // ==========================================
+    const numberInputs = document.querySelectorAll('input[type="number"]');
+    numberInputs.forEach(input => {
+        // Evitar teclear el signo menos o la "e" (exponente)
+        input.addEventListener('keydown', function(e) {
+            if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+') {
+                e.preventDefault();
+            }
+        });
+        // Evitar pegar textos que traigan un signo menos
+        input.addEventListener('paste', function(e) {
+            const pastedData = e.clipboardData.getData('text');
+            if (pastedData.includes('-')) {
+                e.preventDefault();
+            }
+        });
+    });
 
     if (curpInput) {
         curpInput.addEventListener('input', function(e) {

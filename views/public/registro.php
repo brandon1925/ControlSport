@@ -12,7 +12,8 @@ $id_entrenador = isset($_GET['ref']) ? (int)$_GET['ref'] : 0;
     <title>Solicitud de Inscripción - ControlSport</title>
     <!-- Iconos Phosphor -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link rel="stylesheet" href="../../assets/css/registro.css">
+    <!-- Agregamos time() para evitar la caché y que cargue siempre bien el diseño -->
+    <link rel="stylesheet" href="../../assets/css/registro.css?v=<?php echo time(); ?>">
     <style>
         .toast-container { position: fixed; top: 30px; right: 30px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
         .toast { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 1px solid; }
@@ -23,7 +24,7 @@ $id_entrenador = isset($_GET['ref']) ? (int)$_GET['ref'] : 0;
     <div class="form-container">
         <!-- Header Azul -->
         <div class="form-header">
-            <!-- <a href="../auth/login.php"><i class="ph ph-arrow-left"></i></a> -->
+            <a href="../auth/login.php"><i class="ph ph-arrow-left"></i></a>
             <h2>Solicitud de Inscripción</h2>
         </div>
 
@@ -35,7 +36,7 @@ $id_entrenador = isset($_GET['ref']) ? (int)$_GET['ref'] : 0;
                 </div>
             <?php else: ?>
                 
-                <!-- SECCIÓN NUEVA: Consultar Estatus -->
+                <!-- SECCIÓN: Consultar Estatus -->
                 <div style="text-align: center; margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px solid #F1F5F9;">
                     <p style="font-size: 13px; color: #64748B; margin-bottom: 10px; font-weight: 600;">¿Ya llenaste el formulario hace unos días?</p>
                     <button type="button" onclick="abrirModalEstatus()" class="btn-outline-blue">
@@ -45,7 +46,7 @@ $id_entrenador = isset($_GET['ref']) ? (int)$_GET['ref'] : 0;
                 
                 <h3 style="color: #0047AB; font-size: 16px; margin-bottom: 20px; text-align: center;">Nueva Inscripción</h3>
 
-                <!-- Formulario -->
+                <!-- Formulario Principal -->
                 <form action="../../controllers/registroController.php" method="POST">
                     <input type="hidden" name="id_entrenador" value="<?php echo $id_entrenador; ?>">
 
@@ -78,15 +79,16 @@ $id_entrenador = isset($_GET['ref']) ? (int)$_GET['ref'] : 0;
                         <label>Peso (kg)</label>
                         <div class="input-wrapper">
                             <i class="ph ph-scales"></i>
-                            <input type="number" step="0.1" name="peso" placeholder="Ej. 45.5" required>
+                            <input type="number" step="0.1" name="peso" placeholder="Ej. 45.5" min="0" required>
                         </div>
                     </div>
 
+                    <!-- AQUÍ ESTABA EL ERROR: Solo dejamos un campo de estatura -->
                     <div class="input-group">
                         <label>Estatura (cm)</label>
                         <div class="input-wrapper">
                             <i class="ph ph-ruler"></i>
-                            <input type="number" name="estatura" placeholder="Ej. 155" required>
+                            <input type="number" name="estatura" placeholder="Ej. 155" min="0" required>
                         </div>
                     </div>
 

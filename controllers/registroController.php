@@ -29,6 +29,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     list($nombre_t, $apP_t, $apM_t) = dividirNombre($_POST['nombre_tutor']);
 
     try {
+        // NUEVA VALIDACIÓN: Verificar que el NSS no exista ya en la base de datos
+        if ($institucion_medica !== 'Ninguno' && $no_afiliacion !== 'N/A') {
+            $stmt_nss = $conexion->prepare("SELECT id_alumno FROM ControlSport.alumno WHERE num_afiliacion = :nss LIMIT 1");
+            $stmt_nss->execute([':nss' => $no_afiliacion]);
+            if ($stmt_nss->rowCount() > 0) {
+                header("Location: ../views/public/registro.php?ref=$id_entrenador&error=nss");
+                exit;
+            }
+        }
+
         // Iniciamos la transacción (Si falla el alumno, no se guarda el tutor)
         $conexion->beginTransaction();
 
