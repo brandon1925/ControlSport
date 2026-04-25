@@ -1,7 +1,7 @@
 // Archivo: assets/js/registro.js
 
 // ==========================================
-// NUEVO: LÓGICA DE CONSULTA DE ESTATUS (MODAL)
+// MODAL DE CONSULTA DE ESTATUS
 // ==========================================
 function abrirModalEstatus() {
     const modal = document.getElementById('modalEstatus');
@@ -13,138 +13,96 @@ function cerrarModalEstatus() {
     const modal = document.getElementById('modalEstatus');
     modal.classList.remove('active');
     setTimeout(() => modal.style.display = 'none', 300);
-    // Limpiamos los campos al cerrar
     document.getElementById('curp_consulta').value = '';
     document.getElementById('resultadoEstatus').style.display = 'none';
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     
-    // Capturamos el formulario de estatus
+    // ESTATUS SUBMIT
     const formEstatus = document.getElementById('formEstatus');
     if (formEstatus) {
         formEstatus.addEventListener('submit', async function(e) {
-            e.preventDefault(); // Evitamos que la página se recargue
-
+            e.preventDefault();
             const curpConsulta = document.getElementById('curp_consulta').value.toUpperCase();
             const btnConsulta = document.getElementById('btnConsultarEstatus');
             const resultBox = document.getElementById('resultadoEstatus');
             
-            // Estado de carga
             btnConsulta.disabled = true;
             btnConsulta.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Buscando...';
             resultBox.style.display = 'none';
 
             try {
-                // Hacemos la consulta al backend
                 const response = await fetch('../../controllers/consultaEstatus.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ curp: curpConsulta })
                 });
-                
                 const data = await response.json();
-                
                 resultBox.style.display = 'block';
                 
                 if (data.success) {
                     if (data.estado === 'Pendiente') {
-                        resultBox.style.background = '#FFFBEB';
-                        resultBox.style.color = '#D97706';
-                        resultBox.style.borderColor = '#FEF3C7';
-                        resultBox.innerHTML = `<div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;"><i class="ph-fill ph-clock" style="font-size:22px;"></i> <b style="font-size:15px;">En revisión</b></div> La solicitud de <b>${data.nombre}</b> sigue pendiente de aprobación por el entrenador.`;
+                        resultBox.style.background = '#FFFBEB'; resultBox.style.color = '#D97706'; resultBox.style.borderColor = '#FEF3C7';
+                        resultBox.innerHTML = `<div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;"><i class="ph-fill ph-clock" style="font-size:22px;"></i> <b style="font-size:15px;">En revisión</b></div> La solicitud de <b>${data.nombre}</b> sigue pendiente de aprobación.`;
                     } else if (data.estado === 'Inscrito') {
-                        resultBox.style.background = '#F0FDF4';
-                        resultBox.style.color = '#16A34A';
-                        resultBox.style.borderColor = '#DCFCE7';
-                        resultBox.innerHTML = `<div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;"><i class="ph-fill ph-check-circle" style="font-size:22px;"></i> <b style="font-size:15px;">¡Aprobada!</b></div> La solicitud de <b>${data.nombre}</b> fue aceptada. Ya es parte oficial del grupo.`;
+                        resultBox.style.background = '#F0FDF4'; resultBox.style.color = '#16A34A'; resultBox.style.borderColor = '#DCFCE7';
+                        resultBox.innerHTML = `<div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;"><i class="ph-fill ph-check-circle" style="font-size:22px;"></i> <b style="font-size:15px;">¡Aprobada!</b></div> La solicitud de <b>${data.nombre}</b> fue aceptada.`;
                     } else if (data.estado === 'Rechazado') {
-                        // === NUEVO ESTADO AGREGADO ===
-                        resultBox.style.background = '#FEF2F2';
-                        resultBox.style.color = '#EF4444';
-                        resultBox.style.borderColor = '#FEE2E2';
-                        resultBox.innerHTML = `<div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;"><i class="ph-fill ph-x-circle" style="font-size:22px;"></i> <b style="font-size:15px;">Solicitud no aceptada</b></div> Lo sentimos, la solicitud de <b>${data.nombre}</b> fue rechazada en esta ocasión. Por favor, contacta al entrenador para más detalles.`;
+                        resultBox.style.background = '#FEF2F2'; resultBox.style.color = '#EF4444'; resultBox.style.borderColor = '#FEE2E2';
+                        resultBox.innerHTML = `<div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;"><i class="ph-fill ph-x-circle" style="font-size:22px;"></i> <b style="font-size:15px;">No aceptada</b></div> Lo sentimos, la solicitud de <b>${data.nombre}</b> no fue aceptada en esta ocasión.`;
                     }
                 } else {
-                    // Si no la encuentra (porque nunca la llenaron o la escribieron mal)
-                    resultBox.style.background = '#F8FAFC';
-                    resultBox.style.color = '#64748B';
-                    resultBox.style.borderColor = '#E2E8F0';
-                    resultBox.innerHTML = `<div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;"><i class="ph-fill ph-question" style="font-size:22px;"></i> <b style="font-size:15px;">No encontrada</b></div> No hay solicitudes registradas con esta CURP. Verifica que esté bien escrita.`;
+                    resultBox.style.background = '#F8FAFC'; resultBox.style.color = '#64748B'; resultBox.style.borderColor = '#E2E8F0';
+                    resultBox.innerHTML = `<div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;"><i class="ph-fill ph-question" style="font-size:22px;"></i> <b style="font-size:15px;">No encontrada</b></div> No hay solicitudes registradas con esta CURP.`;
                 }
             } catch (err) {
-                resultBox.style.display = 'block';
-                resultBox.innerHTML = 'Error de conexión. Intenta de nuevo.';
+                resultBox.style.display = 'block'; resultBox.innerHTML = 'Error de conexión. Intenta de nuevo.';
             } finally {
-                // Restauramos el botón
-                btnConsulta.disabled = false;
-                btnConsulta.innerHTML = 'Consultar';
+                btnConsulta.disabled = false; btnConsulta.innerHTML = 'Consultar';
             }
         });
     }
 
-
     // ==========================================
-    // LÓGICA DE VALIDACIÓN DEL FORMULARIO
+    // LÓGICA GENERAL DEL FORMULARIO
     // ==========================================
     const curpInput = document.getElementById('curp_alumno');
     const msgCurp = document.getElementById('msg_curp');
-    const telInput = document.getElementById('tel_tutor');
-    const msgTel = document.getElementById('msg_tel');
     const instMedica = document.getElementById('inst_medica');
     const nssInput = document.getElementById('no_afiliacion');
     const msgNss = document.getElementById('msg_nss');
     const btnGuardar = document.getElementById('btnGuardar');
     const formInscripcion = document.querySelector('form');
     const nombreAlumnoInput = document.querySelector('input[name="nombre_completo"]');
-    const nombreTutorInput = document.querySelector('input[name="nombre_tutor"]');
 
-    let validaciones = { curp: false, tel: false, nss: false };
+    // Cambiamos "tel" por "tutor" en el validador principal
+    let validaciones = { curp: false, nss: false, tutor: false };
 
     function checkFormulario() {
-        if (validaciones.curp && validaciones.tel && validaciones.nss) {
+        if (validaciones.curp && validaciones.nss && validaciones.tutor) {
             if(btnGuardar) { btnGuardar.disabled = false; btnGuardar.style.opacity = '1'; btnGuardar.style.cursor = 'pointer'; }
         } else {
             if(btnGuardar) { btnGuardar.disabled = true; btnGuardar.style.opacity = '0.5'; btnGuardar.style.cursor = 'not-allowed'; }
         }
     }
 
-    // ==========================================
-    // MEJORA 1: AUTO-MAYÚSCULAS EN NOMBRES
-    // ==========================================
     if (nombreAlumnoInput) {
         nombreAlumnoInput.addEventListener('input', function(e) {
             let start = this.selectionStart; let end = this.selectionEnd;
-            this.value = this.value.toUpperCase(); 
-            this.setSelectionRange(start, end);
+            this.value = this.value.toUpperCase(); this.setSelectionRange(start, end);
         });
     }
 
-    if (nombreTutorInput) {
-        nombreTutorInput.addEventListener('input', function(e) {
-            let start = this.selectionStart; let end = this.selectionEnd;
-            this.value = this.value.toUpperCase(); 
-            this.setSelectionRange(start, end);
-        });
-    }
-
-    // ==========================================
-    // NUEVO: BLOQUEO ESTRICTO DE NÚMEROS NEGATIVOS
-    // ==========================================
+    // Bloqueo de Negativos
     const numberInputs = document.querySelectorAll('input[type="number"]');
     numberInputs.forEach(input => {
-        // Evitar teclear el signo menos o la "e" (exponente)
         input.addEventListener('keydown', function(e) {
-            if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+') {
-                e.preventDefault();
-            }
+            if (e.key === '-' || e.key === 'e' || e.key === 'E' || e.key === '+') e.preventDefault();
         });
-        // Evitar pegar textos que traigan un signo menos
         input.addEventListener('paste', function(e) {
             const pastedData = e.clipboardData.getData('text');
-            if (pastedData.includes('-')) {
-                e.preventDefault();
-            }
+            if (pastedData.includes('-')) e.preventDefault();
         });
     });
 
@@ -161,24 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 curpInput.style.borderColor = '#EF4444'; msgCurp.style.color = '#DC2626'; validaciones.curp = false;
                 if (curp.length < 18) { msgCurp.textContent = `Faltan ${18 - curp.length} caracteres...`; } 
-                else { msgCurp.textContent = 'El formato no cumple con la estructura oficial de CURP.'; }
-            }
-            checkFormulario();
-        });
-    }
-
-    if (telInput) {
-        telInput.addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/\D/g, '');
-            let tel = e.target.value;
-
-            if (tel.length === 0) {
-                telInput.style.borderColor = ''; msgTel.textContent = ''; validaciones.tel = false;
-            } else if (tel.length === 10) {
-                telInput.style.borderColor = '#22C55E'; msgTel.textContent = 'Teléfono Válido ✓'; msgTel.style.color = '#16A34A'; validaciones.tel = true;
-            } else {
-                telInput.style.borderColor = '#EF4444'; msgTel.style.color = '#DC2626';
-                msgTel.textContent = `Debe tener 10 números (Faltan ${10 - tel.length})`; validaciones.tel = false;
+                else { msgCurp.textContent = 'Formato no cumple con la estructura oficial de CURP.'; }
             }
             checkFormulario();
         });
@@ -207,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     nssInput.style.borderColor = '#22C55E'; msgNss.textContent = `${institucion} Válido ✓`; msgNss.style.color = '#16A34A'; validaciones.nss = true;
                 } else {
                     nssInput.style.borderColor = '#EF4444'; msgNss.style.color = '#DC2626';
-                    msgNss.textContent = `El NSS del ${institucion} debe tener ${minReq} dígitos numéricos.`; validaciones.nss = false;
+                    msgNss.textContent = `Debe tener ${minReq} a ${maxReq} dígitos numéricos.`; validaciones.nss = false;
                 }
             } else {
                 nssInput.removeAttribute('maxlength');
@@ -215,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     nssInput.style.borderColor = '#22C55E'; msgNss.textContent = 'Póliza Válida ✓'; msgNss.style.color = '#16A34A'; validaciones.nss = true;
                 } else {
                     nssInput.style.borderColor = '#EF4444'; msgNss.style.color = '#DC2626';
-                    msgNss.textContent = 'Ingrese la póliza completa (Mínimo 5 caracteres)'; validaciones.nss = false;
+                    msgNss.textContent = 'Ingrese la póliza completa (Mín. 5)'; validaciones.nss = false;
                 }
             }
         }
@@ -229,10 +170,163 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (formInscripcion && formInscripcion.id !== 'formEstatus') {
         formInscripcion.addEventListener('submit', function() {
-            if(btnGuardar) {
+            if(btnGuardar && !btnGuardar.disabled) {
                 btnGuardar.disabled = true; btnGuardar.style.opacity = '0.7'; btnGuardar.style.cursor = 'wait';
-                btnGuardar.innerHTML = '<i class="ph ph-spinner ph-spin" style="margin-right: 8px;"></i> Procesando Solicitud...';
+                btnGuardar.innerHTML = '<i class="ph ph-spinner ph-spin" style="margin-right: 8px;"></i> Procesando...';
             }
         });
     }
+
+    // ==========================================
+    // BUSCADOR INTELIGENTE DE TUTORES
+    // ==========================================
+    const inputBuscarTutor = document.getElementById('buscar_tutor');
+    const listaTutores = document.getElementById('lista_tutores');
+    const tutorSearchContainer = document.getElementById('tutor_search_container');
+    const tutorSelectedCard = document.getElementById('tutor_selected_card');
+    const tutorSelectedName = document.getElementById('tutor_selected_name');
+
+    const hiddenIdTutor = document.getElementById('hidden_id_tutor');
+    const hiddenNombreTutor = document.getElementById('hidden_nombre_tutor');
+    const hiddenTelefonoTutor = document.getElementById('hidden_telefono_tutor');
+
+    let debounceTimer;
+
+    if (inputBuscarTutor) {
+        inputBuscarTutor.addEventListener('input', function(e) {
+            let start = this.selectionStart; let end = this.selectionEnd;
+            this.value = this.value.toUpperCase(); this.setSelectionRange(start, end);
+            
+            const query = this.value.trim();
+
+            clearTimeout(debounceTimer);
+            if (query.length < 2) {
+                listaTutores.style.display = 'none';
+                return;
+            }
+
+            debounceTimer = setTimeout(async () => {
+                try {
+                    const response = await fetch('../../controllers/buscarTutor.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ q: query })
+                    });
+                    const res = await response.json();
+                    
+                    listaTutores.innerHTML = '';
+                    if (res.success && res.data.length > 0) {
+                        res.data.forEach(tutor => {
+                            const div = document.createElement('div');
+                            div.className = 'autocomplete-item';
+                            // Ocultamos los números del medio para respetar la privacidad
+                            const telOculto = tutor.telefono.substring(0,3) + '****' + tutor.telefono.substring(7);
+                            div.innerHTML = `<i class="ph ph-user"></i> <div><b>${tutor.nombre_completo}</b><br><small style="color:#94A3B8;">Tel: ${telOculto}</small></div>`;
+                            
+                            div.onclick = () => { window.seleccionarTutor(tutor.id_tutor, tutor.nombre_completo, ''); };
+                            listaTutores.appendChild(div);
+                        });
+                        listaTutores.style.display = 'block';
+                    } else {
+                        listaTutores.innerHTML = '<div style="padding: 15px; color: #94A3B8; font-size: 13px; text-align:center;">No encontramos a ningún tutor con ese nombre. Regístrate haciendo clic en el botón de abajo.</div>';
+                        listaTutores.style.display = 'block';
+                    }
+                } catch (err) {
+                    console.error("Error buscando");
+                }
+            }, 300);
+        });
+
+        // Ocultar si da clic afuera
+        document.addEventListener('click', function(e) {
+            if (!tutorSearchContainer.contains(e.target)) { listaTutores.style.display = 'none'; }
+        });
+    }
+
+    window.seleccionarTutor = function(id, nombre, telefono) {
+        hiddenIdTutor.value = id;
+        hiddenNombreTutor.value = nombre;
+        hiddenTelefonoTutor.value = telefono;
+
+        tutorSearchContainer.style.display = 'none';
+        tutorSelectedCard.style.display = 'flex';
+        tutorSelectedName.innerText = nombre;
+
+        validaciones.tutor = true;
+        checkFormulario();
+        listaTutores.style.display = 'none';
+    };
+
+    window.removerTutor = function() {
+        hiddenIdTutor.value = ''; hiddenNombreTutor.value = ''; hiddenTelefonoTutor.value = '';
+        inputBuscarTutor.value = '';
+        tutorSelectedCard.style.display = 'none';
+        tutorSearchContainer.style.display = 'block';
+
+        validaciones.tutor = false;
+        checkFormulario();
+    };
+
+    window.abrirModalTutor = function() {
+        const modal = document.getElementById('modalTutor');
+        modal.style.display = 'flex';
+        setTimeout(() => modal.classList.add('active'), 10);
+    };
+
+    window.cerrarModalTutor = function() {
+        const modal = document.getElementById('modalTutor');
+        modal.classList.remove('active');
+        setTimeout(() => modal.style.display = 'none', 300);
+    };
+
+    // ==========================================
+    // LÓGICA DEL MODAL "NUEVO TUTOR"
+    // ==========================================
+    const modalTelInput = document.getElementById('modal_tel_tutor');
+    const modalNombreInput = document.getElementById('modal_nombre_tutor');
+    const modalMsgTel = document.getElementById('modal_msg_tel');
+    const btnConfirmarTutor = document.getElementById('btnConfirmarTutor');
+    
+    let telModalValido = false;
+
+    if (modalNombreInput) {
+        modalNombreInput.addEventListener('input', function(e) {
+            let start = this.selectionStart; let end = this.selectionEnd;
+            this.value = this.value.toUpperCase(); this.setSelectionRange(start, end);
+            validarBtnModal();
+        });
+    }
+
+    if (modalTelInput) {
+        modalTelInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+            let tel = e.target.value;
+
+            if (tel.length === 0) {
+                modalTelInput.style.borderColor = ''; modalMsgTel.textContent = ''; telModalValido = false;
+            } else if (tel.length === 10) {
+                modalTelInput.style.borderColor = '#22C55E'; modalMsgTel.textContent = 'Teléfono Válido ✓'; modalMsgTel.style.color = '#16A34A'; telModalValido = true;
+            } else {
+                modalTelInput.style.borderColor = '#EF4444'; modalMsgTel.style.color = '#DC2626';
+                modalMsgTel.textContent = `Debe tener 10 números (Faltan ${10 - tel.length})`; telModalValido = false;
+            }
+            validarBtnModal();
+        });
+    }
+
+    function validarBtnModal() {
+        if (telModalValido && modalNombreInput.value.trim().length >= 8) {
+            btnConfirmarTutor.disabled = false; btnConfirmarTutor.style.opacity = '1'; btnConfirmarTutor.style.cursor = 'pointer';
+        } else {
+            btnConfirmarTutor.disabled = true; btnConfirmarTutor.style.opacity = '0.5'; btnConfirmarTutor.style.cursor = 'not-allowed';
+        }
+    }
+
+    window.confirmarNuevoTutor = function() {
+        const nombre = modalNombreInput.value.trim();
+        const telefono = modalTelInput.value.trim();
+        
+        seleccionarTutor(0, nombre, telefono);
+        cerrarModalTutor();
+    };
 });
