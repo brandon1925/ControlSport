@@ -72,6 +72,33 @@
     opacity: 0.8;
 }
 
+/* ================== BANNERS DE ALERTA ================== */
+.banner-warning {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+.banner-warning i { font-size: 28px; }
+.banner-warning h4 { margin: 0 0 4px 0; font-size: 15px; font-weight: 600; }
+.banner-warning p { margin: 0; font-size: 13px; }
+
+.banner-red { background: #FEF2F2; border: 1px solid #FEE2E2; border-left: 4px solid #EF4444; }
+.banner-red i { color: #EF4444; }
+.banner-red h4 { color: #991B1B; }
+.banner-red p { color: #B91C1C; }
+
+.banner-yellow { background: #FFFBEB; border: 1px solid #FEF3C7; border-left: 4px solid #F59E0B; }
+.banner-yellow i { color: #F59E0B; }
+.banner-yellow h4 { color: #92400E; }
+.banner-yellow p { color: #B45309; }
+
 /* ================== EVALUACIÓN (SLIDERS) ================== */
 .section-title-alt {
     color: #0047AB;

@@ -53,7 +53,6 @@ require_once '../templates/header.php';
         <h2>Pase de Lista</h2>
     </div>
 
-    <!-- Tarjeta de Selección con diseño moderno -->
     <div class="selector-card">
         <label>Seleccionar Grupo</label>
         <select id="selectGrupoAsistencia" class="select-modern" style="max-width: 400px;">
@@ -69,7 +68,6 @@ require_once '../templates/header.php';
         
         <div class="asistencia-container" id="asistenciaListado">
             
-            <!-- Banner de Advertencia (Oculto por defecto) -->
             <div id="bannerBloqueo" class="banner-warning" style="display: none;">
                 <i class="ph-fill ph-warning-circle"></i>
                 <div>
@@ -141,28 +139,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const alumnos = document.querySelectorAll('.alumno-asistencia-item');
     const txtCount = document.getElementById('txtCantidadAlumnos');
 
-    // Datos extraídos de PHP
     const asistenciasHoy = <?php echo json_encode($asistencias_hoy); ?>;
 
     select.addEventListener('change', function() {
         const grupoId = this.value;
         inputGrupo.value = grupoId;
-
-        // Limpiar vista
         container.style.display = 'none';
 
         if (grupoId === "") return;
 
         const datosGuardados = asistenciasHoy[grupoId];
 
-        // Configurar botones y banners según el estado
         if (datosGuardados) {
-            // MODO SOLO LECTURA
             bannerBloqueo.style.display = 'flex';
             btnGuardar.style.display = 'none';
             btnEditar.style.display = 'flex';
         } else {
-            // MODO NUEVO REGISTRO
             bannerBloqueo.style.display = 'none';
             btnGuardar.style.display = 'block';
             btnGuardar.innerText = 'Guardar';
@@ -181,12 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const checkbox = document.getElementById('chk_' + idAlumno);
                 
                 if (datosGuardados) {
-                    // Cargar valores guardados y bloquear
                     checkbox.checked = (datosGuardados[idAlumno] === 'Presente');
                     checkbox.disabled = true;
                     item.classList.add('readonly');
                 } else {
-                    // Resetear y habilitar para nuevo registro
                     checkbox.checked = false;
                     checkbox.disabled = false;
                     item.classList.remove('readonly');
@@ -198,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
         txtCount.innerText = `${contador} alumnos`;
     });
 
-    // --- Manejo de Toasts Globales (vienen del header.php) ---
+    // --- Manejo Inteligente de Errores y Éxitos ---
     <?php if(isset($_GET['msg'])): ?>
         <?php if($_GET['msg'] == 'success'): ?>
             mostrarToastGlobal('Asistencia guardada: <?php echo $_GET['p']; ?>/<?php echo $_GET['t']; ?> presentes');
@@ -206,9 +196,15 @@ document.addEventListener('DOMContentLoaded', () => {
             mostrarToastGlobal('Modificaciones guardadas correctamente. <?php echo $_GET['p']; ?>/<?php echo $_GET['t']; ?> presentes');
         <?php endif; ?>
     <?php endif; ?>
+
+    // NUEVO: Captura de fallos en Base de Datos
+    <?php if(isset($_GET['error']) && $_GET['error'] == 'db'): ?>
+        mostrarToastGlobal('Error de BD: El registro no se pudo guardar.');
+        console.error("Error PostgreSQL: <?php echo addslashes($_GET['detalle'] ?? ''); ?>");
+        alert("Atención: Hubo un fallo en la base de datos al intentar guardar. Revisa la consola de tu navegador para más detalles técnicos (Probablemente necesites sincronizar las secuencias SQL).");
+    <?php endif; ?>
 });
 
-// ================= FUNCIONES PARA LA EDICIÓN =================
 function abrirModalEditarLista() {
     const modal = document.getElementById('modalEditarLista');
     if(!modal) return;
@@ -216,7 +212,6 @@ function abrirModalEditarLista() {
     setTimeout(() => modal.classList.add('active'), 10);
 }
 
-// ESTA ERA LA FUNCIÓN QUE FALTABA
 function cerrarModal(id) {
     const modal = document.getElementById(id);
     if (!modal) return;
@@ -225,10 +220,7 @@ function cerrarModal(id) {
 }
 
 function confirmarEdicion() {
-    // Cerrar modal
     cerrarModal('modalEditarLista');
-    
-    // Ocultar banner y botón editar, mostrar botón guardar
     document.getElementById('bannerBloqueo').style.display = 'none';
     document.getElementById('btnEditar').style.display = 'none';
     
@@ -236,7 +228,6 @@ function confirmarEdicion() {
     btnGuardar.style.display = 'block';
     btnGuardar.innerText = 'Guardar Cambios';
 
-    // Desbloquear todos los checkboxes visibles
     const grupoId = document.getElementById('selectGrupoAsistencia').value;
     document.querySelectorAll('.alumno-asistencia-item').forEach(item => {
         if (item.getAttribute('data-grupo') === grupoId) {

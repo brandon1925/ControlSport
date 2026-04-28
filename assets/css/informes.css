@@ -17,6 +17,35 @@
     margin: 0;
 }
 
+/* ================= SELECTOR MODERNO ================= */
+.input-modern {
+    padding: 12px 20px;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    background-color: #F8FAFC;
+    font-size: 15px;
+    color: #1E293B;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-modern:focus {
+    background-color: white;
+    border-color: #0047AB;
+    box-shadow: 0 0 0 4px rgba(0, 71, 171, 0.1);
+}
+
+.select-modern {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394A3B8'%3e%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3e%3C/path%3e%3C/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 18px;
+    cursor: pointer;
+}
+
 /* ================= RANKING VISTA ================= */
 .subtitle-ranking {
     color: #94A3B8;
@@ -91,9 +120,10 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
-/* Badges de Medalla en texto */
+/* Badges (Medallas y Alertas) */
 .badge-medal {
     padding: 3px 10px;
     border-radius: 12px;
@@ -104,6 +134,19 @@
 .badge-gold { background: #FACC15; }
 .badge-silver { background: #94A3B8; }
 .badge-bronze { background: #D97706; }
+
+.badge-alert {
+    background: #FEF2F2;
+    color: #EF4444;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid #FEE2E2;
+}
 
 .student-stats {
     color: #94A3B8;
@@ -138,11 +181,12 @@
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-.btn-back {
-    background: transparent;
-    color: #64748B;
-    border: 1px solid #E2E8F0;
-    padding: 8px 15px;
+/* Botón Volver Naranja */
+.btn-back-orange {
+    background: #FF5A00;
+    color: white;
+    border: none;
+    padding: 10px 20px;
     border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
@@ -150,9 +194,31 @@
     gap: 8px;
     margin-bottom: 20px;
     font-weight: 600;
+    font-size: 14px;
     transition: 0.2s;
+    box-shadow: 0 4px 10px rgba(255, 90, 0, 0.2);
 }
-.btn-back:hover { background: #F8FAFC; color: #0047AB; border-color: #0047AB; }
+.btn-back-orange:hover {
+    background: #E04E00;
+    transform: translateY(-2px);
+}
+
+/* Banner de Alerta en Detalles */
+.banner-warning {
+    background: #FFFBEB;
+    border: 1px solid #FEF3C7;
+    border-left: 4px solid #F59E0B;
+    padding: 15px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    animation: fadeIn 0.3s ease;
+}
+.banner-warning i { font-size: 28px; color: #F59E0B; }
+.banner-warning h4 { color: #92400E; margin: 0 0 4px 0; font-size: 15px; font-weight: 600; }
+.banner-warning p { color: #B45309; margin: 0; font-size: 13px; }
 
 .detail-grid {
     display: grid;

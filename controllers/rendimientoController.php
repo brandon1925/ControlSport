@@ -15,6 +15,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fecha = date('Y-m-d');
 
     try {
+        // --- CORRECCIÓN: Validar en Backend que tenga asistencias 'Presente' ---
+        $stmt_check = $conexion->prepare("SELECT COUNT(id_detalle) FROM ControlSport.detalle_asistencia WHERE id_alumno = :id AND estado_asistencia = 'Presente'");
+        $stmt_check->execute([':id' => $id_alumno]);
+        $asistencias = $stmt_check->fetchColumn();
+
+        if ($asistencias == 0) {
+            // Si el alumno tiene 0 asistencias, rechazamos la inserción y devolvemos un error
+            header("Location: ../views/admin/rendimiento.php?error=no_asistencia");
+            exit;
+        }
+        // ----------------------------------------------------------------
+
         $sql = "INSERT INTO ControlSport.evaluacion_rendimiento 
                 (id_alumno, fecha_evaluacion, velocidad, fuerza, resistencia, agilidad, coordinacion, flexibilidad, notas_adicionales) 
                 VALUES (:id, :fecha, :v, :f, :r, :a, :c, :fl, :n)";

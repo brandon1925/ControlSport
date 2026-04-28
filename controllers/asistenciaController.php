@@ -74,7 +74,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     } catch (PDOException $e) {
         $conexion->rollBack();
-        die("Error al guardar asistencia: " . $e->getMessage());
+        // MEJORA: En lugar de morir en un pantallazo blanco, te devolvemos con el error
+        $error_detalle = urlencode($e->getMessage());
+        header("Location: ../views/admin/asistencias.php?error=db&detalle=$error_detalle");
+        exit;
     }
 }
 ?>

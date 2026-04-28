@@ -13,16 +13,35 @@ function pintarFondoSlider(slider) {
     slider.style.background = `linear-gradient(to right, #FF5A00 ${porcentaje}%, #E2E8F0 ${porcentaje}%)`;
 }
 
+// NUEVO: Función para calcular el promedio (Requerimiento 2)
+function calcularPromedio() {
+    const sliders = document.querySelectorAll('.range-slider');
+    let suma = 0;
+    sliders.forEach(s => suma += parseInt(s.value));
+    const promedio = suma / sliders.length;
+    
+    const alertaRend = document.getElementById('alertaRendimiento');
+    if (alertaRend) {
+        if (promedio < 6) {
+            alertaRend.style.display = 'flex';
+        } else {
+            alertaRend.style.display = 'none';
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const selectGrupo = document.getElementById('selectGrupo');
     const selectAlumno = document.getElementById('selectAlumno');
     const evalSection = document.getElementById('evalSection');
+    const alertaAsistencia = document.getElementById('alertaAsistencia');
 
     // Filtrar alumnos por grupo
     selectGrupo.addEventListener('change', function() {
         const idGrupo = this.value;
         selectAlumno.innerHTML = '<option value="">Selecciona un alumno</option>';
         evalSection.style.display = 'none';
+        if(alertaAsistencia) alertaAsistencia.style.display = 'none';
 
         if (idGrupo) {
             selectAlumno.disabled = false;
@@ -31,6 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const newOpt = document.createElement('option');
                 newOpt.value = opt.value;
                 newOpt.text = opt.text;
+                // Transferimos el dato de asistencias al select visible
+                newOpt.setAttribute('data-asist', opt.getAttribute('data-asist'));
                 selectAlumno.appendChild(newOpt);
             });
         } else {
@@ -38,14 +59,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Mostrar evaluación al elegir alumno
+    // Mostrar evaluación o bloqueo al elegir alumno (Requerimiento 1)
     selectAlumno.addEventListener('change', function() {
         if (this.value) {
-            evalSection.style.display = 'block';
-            // Repintar todos los sliders al mostrar la sección
-            document.querySelectorAll('.range-slider').forEach(s => pintarFondoSlider(s));
+            const selectedOpt = this.options[this.selectedIndex];
+            const asistencias = parseInt(selectedOpt.getAttribute('data-asist') || 0);
+
+            if (asistencias === 0) {
+                // Bloquear evaluación si no tiene asistencias
+                evalSection.style.display = 'none';
+                if(alertaAsistencia) alertaAsistencia.style.display = 'flex';
+            } else {
+                // Habilitar evaluación y ocultar bloqueo
+                if(alertaAsistencia) alertaAsistencia.style.display = 'none';
+                evalSection.style.display = 'block';
+                
+                // Repintar sliders y calcular promedio inicial
+                document.querySelectorAll('.range-slider').forEach(s => pintarFondoSlider(s));
+                calcularPromedio(); 
+            }
         } else {
             evalSection.style.display = 'none';
+            if(alertaAsistencia) alertaAsistencia.style.display = 'none';
         }
     });
 
@@ -56,11 +91,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Inicializar color al cargar
         pintarFondoSlider(s);
 
-        // Actualizar color y texto al mover
+        // Actualizar color y texto al arrastrar
         s.addEventListener('input', function() {
             const key = this.getAttribute('data-metric');
             document.getElementById(`val_${key}`).innerText = this.value;
             pintarFondoSlider(this);
+            calcularPromedio(); // Recalcular promedio en tiempo real (Requerimiento 2)
         });
     });
 });

@@ -25,6 +25,26 @@ function verDetalleAlumno(idAlumno, nombreAlumno) {
     // Obtener datos del alumno desde la variable global inyectada en PHP
     const evals = datosEvaluacionesGlobal.filter(e => e.id_alumno == idAlumno);
     
+    // --- LÓGICA PARA MOSTRAR BANNER DE BAJO RENDIMIENTO ---
+    const bannerAlerta = document.getElementById('alertaRendimientoDetalle');
+    if (evals.length > 0) {
+        let sumaTotal = 0;
+        evals.forEach(e => {
+            sumaTotal += (parseInt(e.velocidad) + parseInt(e.fuerza) + parseInt(e.resistencia) + parseInt(e.agilidad) + parseInt(e.coordinacion) + parseInt(e.flexibilidad));
+        });
+        
+        let promedioGeneral = sumaTotal / (evals.length * 6);
+        
+        if (promedioGeneral < 6) {
+            bannerAlerta.style.display = 'flex';
+        } else {
+            bannerAlerta.style.display = 'none';
+        }
+    } else {
+        bannerAlerta.style.display = 'none';
+    }
+    // ------------------------------------------------------
+
     // Cargar Notas
     cargarObservaciones(evals);
 

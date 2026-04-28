@@ -20,47 +20,53 @@ try {
     $sql_grupos = "SELECT id_grupo, nombre_grupo FROM ControlSport.grupo " . ($rol === 'Entrenador' ? "WHERE id_entrenador = $id_usuario" : "") . " ORDER BY nombre_grupo ASC";
     $grupos = $conexion->query($sql_grupos)->fetchAll(PDO::FETCH_ASSOC);
 
-    // Si no hay grupo seleccionado por GET, tomar el primero por defecto
     if (empty($id_grupo_seleccionado) && count($grupos) > 0) {
         $id_grupo_seleccionado = $grupos[0]['id_grupo'];
     }
 
     if (!empty($id_grupo_seleccionado)) {
-        // 2. Obtener Alumnos del grupo
+        // 2. Obtener Alumnos
         $stmt_alumnos = $conexion->prepare("SELECT id_alumno, nombre_alumno, apellido_p_a FROM ControlSport.alumno WHERE id_grupo = :id_g AND estado = 'Inscrito'");
         $stmt_alumnos->execute([':id_g' => $id_grupo_seleccionado]);
         $alumnos = $stmt_alumnos->fetchAll(PDO::FETCH_ASSOC);
 
-        // 3. Obtener TODAS las evaluaciones del grupo (Para gráfica y cálculo de PTS)
+        // 3. Obtener Evaluaciones
         $stmt_eval = $conexion->prepare("SELECT er.* FROM ControlSport.evaluacion_rendimiento er JOIN ControlSport.alumno a ON er.id_alumno = a.id_alumno WHERE a.id_grupo = :id_g");
         $stmt_eval->execute([':id_g' => $id_grupo_seleccionado]);
         $evaluaciones_completas = $stmt_eval->fetchAll(PDO::FETCH_ASSOC);
 
-        // 4. Obtener TODAS las asistencias del grupo
+        // 4. Obtener Asistencias
         $stmt_asist = $conexion->prepare("SELECT da.id_alumno, da.estado_asistencia FROM ControlSport.detalle_asistencia da JOIN ControlSport.alumno a ON da.id_alumno = a.id_alumno WHERE a.id_grupo = :id_g");
         $stmt_asist->execute([':id_g' => $id_grupo_seleccionado]);
         $asistencias_crudas = $stmt_asist->fetchAll(PDO::FETCH_ASSOC);
 
-        // --- PROCESAR RANKING EN PHP ---
+        // --- PROCESAR RANKING Y BAJO RENDIMIENTO ---
         foreach ($alumnos as $al) {
             $id = $al['id_alumno'];
             
-            // Filtrar evals de este alumno
             $evals_alumno = array_filter($evaluaciones_completas, function($e) use ($id) { return $e['id_alumno'] == $id; });
             
-            // Calcular Puntos (PTS) = Suma de todas las métricas * 10 para dar números grandes (ej. 960)
             $total_pts = 0;
             $sumas_habilidades = ['velocidad'=>0, 'fuerza'=>0, 'resistencia'=>0, 'agilidad'=>0, 'coordinacion'=>0, 'flexibilidad'=>0];
             
             foreach ($evals_alumno as $e) {
                 $suma_eval = $e['velocidad'] + $e['fuerza'] + $e['resistencia'] + $e['agilidad'] + $e['coordinacion'] + $e['flexibilidad'];
-                $total_pts += ($suma_eval * 10); // Multiplicador para gamificación
-
-                // Acumular para saber su mejor habilidad
+                $total_pts += ($suma_eval * 10); 
                 foreach($sumas_habilidades as $key => $val) { $sumas_habilidades[$key] += $e[$key]; }
             }
 
-            // Determinar mejor habilidad
+            // CALCULAR SI ESTÁ EN BAJO RENDIMIENTO (Promedio < 6)
+            $bajo_rendimiento = false;
+            if (count($evals_alumno) > 0) {
+                $total_metricas_calificadas = count($evals_alumno) * 6;
+                $suma_real_puntos = $total_pts / 10;
+                $promedio_general = $suma_real_puntos / $total_metricas_calificadas;
+                
+                if ($promedio_general < 6) {
+                    $bajo_rendimiento = true;
+                }
+            }
+
             $mejor_habilidad = "Ninguna";
             if (count($evals_alumno) > 0) {
                 $max_val = max($sumas_habilidades);
@@ -69,7 +75,6 @@ try {
                 $mejor_habilidad = $nombres_hab[$key_mejor];
             }
 
-            // Calcular Asistencia
             $asist_alumno = array_filter($asistencias_crudas, function($a) use ($id) { return $a['id_alumno'] == $id; });
             $total_clases = count($asist_alumno);
             $presentes = count(array_filter($asist_alumno, function($a) { return $a['estado_asistencia'] == 'Presente'; }));
@@ -82,7 +87,8 @@ try {
                 'ejercicios' => count($evals_alumno),
                 'total_pts' => $total_pts,
                 'pct_asistencia' => $pct_asistencia,
-                'mejor_habilidad' => $mejor_habilidad
+                'mejor_habilidad' => $mejor_habilidad,
+                'bajo_rendimiento' => $bajo_rendimiento // Pasamos la alerta al HTML
             ];
         }
 
@@ -97,11 +103,9 @@ try {
 require_once '../templates/header.php'; 
 ?>
 
-<!-- Librería Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link rel="stylesheet" href="../../assets/css/informes.css">
+<link rel="stylesheet" href="../../assets/css/informes.css?v=<?php echo time(); ?>">
 
-<!-- Pasar datos de evaluaciones a JS para evitar llamadas AJAX lentas -->
 <script>
     const datosEvaluacionesGlobal = <?php echo json_encode(array_values($evaluaciones_completas)); ?>;
 </script>
@@ -111,7 +115,8 @@ require_once '../templates/header.php';
     <div class="header-informes">
         <h2><i class="ph-fill ph-trophy"></i> Estadísticas y Reportes</h2>
         <form id="formFiltro" method="GET">
-            <select name="id_grupo" class="select-filtro-grupo" onchange="cambiarGrupo()" style="min-width: 280px;">
+            <!-- ESTILOS MODERNOS APLICADOS AL SELECTOR -->
+            <select name="id_grupo" class="input-modern select-modern" onchange="cambiarGrupo()" style="min-width: 280px;">
                 <option value="">Seleccionar Grupo</option>
                 <?php foreach ($grupos as $g): ?>
                     <option value="<?php echo $g['id_grupo']; ?>" <?php echo ($id_grupo_seleccionado == $g['id_grupo']) ? 'selected' : ''; ?>>
@@ -129,7 +134,6 @@ require_once '../templates/header.php';
             
             <div class="ranking-list">
                 <?php foreach ($ranking as $index => $al): 
-                    // Asignar medallas (Oro: 0, Plata: 1, Bronce: 2)
                     $medal_circle = 'medal-none-circle'; $medal_icon = 'ph-medal'; $badge_html = '';
                     if ($index === 0) { $medal_circle = 'medal-gold-circle'; $badge_html = '<span class="badge-medal badge-gold">Oro</span>'; }
                     elseif ($index === 1) { $medal_circle = 'medal-silver-circle'; $badge_html = '<span class="badge-medal badge-silver">Plata</span>'; }
@@ -143,6 +147,11 @@ require_once '../templates/header.php';
                             <div class="student-details">
                                 <h4><?php echo htmlspecialchars($al['nombre_completo']); ?></h4>
                                 <?php echo $badge_html; ?>
+                                
+                                <!-- ETIQUETA VISUAL DE BAJO RENDIMIENTO -->
+                                <?php if ($al['bajo_rendimiento']): ?>
+                                    <span class="badge-alert"><i class="ph-fill ph-warning-circle"></i> Bajo Rendimiento</span>
+                                <?php endif; ?>
                             </div>
                             <div class="student-stats">
                                 <span><?php echo $al['ejercicios']; ?> evaluaciones</span>
@@ -168,12 +177,21 @@ require_once '../templates/header.php';
 
     <!-- ================= VISTA DETALLE (GRÁFICA Y NOTAS) ================= -->
     <div id="detalleAlumnoView">
-        <button class="btn-back" onclick="volverRanking()"><i class="ph ph-arrow-left"></i> Volver al Ranking</button>
+        <!-- BOTÓN DE VOLVER (AHORA ES NARANJA) -->
+        <button class="btn-back-orange" onclick="volverRanking()"><i class="ph ph-arrow-left"></i> Volver al Ranking</button>
         
         <h3 style="color: #1E293B; font-size: 22px; margin-bottom: 20px;">Evolución de Rendimiento — <span id="nombreDetalle" style="color: #0047AB;"></span></h3>
 
+        <!-- BANNER DE BAJO RENDIMIENTO DENTRO DE DETALLES (Inyectado por JS) -->
+        <div id="alertaRendimientoDetalle" class="banner-warning" style="display: none;">
+            <i class="ph-fill ph-warning-circle"></i>
+            <div>
+                <h4>Alerta de Rendimiento</h4>
+                <p>Alumno con bajo rendimiento (Promedio histórico menor a 6)</p>
+            </div>
+        </div>
+
         <div class="detail-grid">
-            <!-- Columna Izquierda: Gráfica -->
             <div class="detail-card">
                 <div class="chart-filters">
                     <button class="filter-btn active" data-skill="todas">Todas</button>
@@ -189,7 +207,6 @@ require_once '../templates/header.php';
                 </div>
             </div>
 
-            <!-- Columna Derecha: Observaciones -->
             <div class="detail-card">
                 <h3><i class="ph-fill ph-chat-teardrop-text"></i> Observaciones del Entrenador</h3>
                 <div class="obs-list" id="obsList">
@@ -201,6 +218,6 @@ require_once '../templates/header.php';
 
 </div>
 
-<script src="../../assets/js/informes.js"></script>
+<script src="../../assets/js/informes.js?v=<?php echo time(); ?>"></script>
 
 <?php require_once '../templates/footer.php'; ?>
